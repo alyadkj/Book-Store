@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fantasia Bookstore</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    /* =======================
+        GLOBAL STYLE
+    ======================= */
+    body {
+      margin: 0;
+      font-family: 'Lato', sans-serif;
+      background-color: #fdfaf5;
+      color: #333;
+    }
+
+    header {
+      background-color: #8b7765;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      margin: 0;
+    }
+
+    header nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: 600;
+    }
+
+    .main {
+      display: flex;
+    }
+
+    /* =======================
+        SIDEBAR
+    ======================= */
+    .sidebar {
+      width: 200px;
+      background-color: #e8dfd3;
+      padding: 20px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .sidebar h3 {
+      font-family: 'Playfair Display', serif;
+      margin-top: 0;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 10px;
+    }
+
+    .sidebar li a {
+      color: #5a4533;
+      text-decoration: none;
+    }
+
+    /* =======================
+        CONTENT AREA
+    ======================= */
+    .content {
+      flex: 1;
+      padding: 20px;
+
+      /* =======================
+       CONTENT AREA
+    ======================= */
+    .content {
+      flex: 1;
+      padding: 20px;
+      
+      /* --- TAMBAHKAN KODE DI BAWAH INI --- */
+      
+      /* Ganti 'gambar-background.jpg' dengan nama file gambar Anda */
+      background-image: 'images/fire.jpg'; 
+      
+      /* Agar gambar memenuhi seluruh area */
+      background-size: cover; 
+      
+      /* Agar gambar berada di tengah */
+      background-position: center;
+      
+      /* Agar gambar tidak diulang-ulang */
+      background-repeat: no-repeat;
+      
+      /* Opsi tambahan: agar background diam saat discroll (parallax) */
+      background-attachment: fixed; 
+    }
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .product {
+      /* Ubah background white menjadi rgba agar transparan */
+      /* Angka 0.9 artinya tingkat kejelasan 90% (sedikit transparan) */
+      background: rgba(255, 255, 255, 0.9); 
+      
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    
+
+    .product img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    /* =======================
+        BUTTON STYLE
+    ======================= */
+    button {
+      padding: 8px 12px;
+      background-color: #6b5a5a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+    }
+
+    button:hover {
+      background-color: #534444;
+    }
+
+    /* =======================
+        CART & CHECKOUT STYLE
+    ======================= */
+    .cart-item {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border: 1px solid #eee;
+    }
+    
+    .cart-info {
+        flex: 1;
+    }
+
+    .checkout-summary {
+        background-color: #f4f4f4;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 5px;
+    }
+
+    footer {
+      background-color: #8b7765;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Fantasia Bookstore</h1>
+    <nav>
+      <a href="#" onclick="showPage('home')">Beranda</a>
+      <a href="#" onclick="showPage('cart')">Keranjang (<span id="cartCount">0</span>)</a>
+    </nav>
+  </header>
+
+  <div class="main">
+    <aside class="sidebar">
+      <h3>Kategori Buku</h3>
+      <ul id="kategoriList"></ul>
+    </aside>
+
+    <section class="content" id="app">
+      </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Fantasia Bookstore</p>
+  </footer>
+
+  <script>
+    /* ========================================
+       DATA PRODUK & KATEGORI
+    ======================================== */
+    const products = [
+  {
+    id: 1,
+    title: "The Poppy War",
+    author: "R.F. Kuang",
+    price: 135000,
+    img: "images/tpw.jpg",
+    desc: "The Poppy War adalah kisah fantasi militer tentang Fang Runin (Rin), seorang yatim piatu dari provinsi miskin yang lolos dari perjodohan dengan cara meraih peringkat pertama dalam ujian nasional untuk masuk ke akademi militer elite, Sinegard. Di sana, ia mengalami diskriminasi tetapi menemukan kekuatan magis yang mematikan, syamanisme, yang terhubung dengan dewa Phoenix yang murka. Rin harus menggunakan kekuatannya untuk melindungi negaranya dari invasi Federasi Mugen, tetapi ia semakin khawatir tentang biaya kemanusiawian yang harus dibayar untuk memenangkan perang"
+  },
+  {
+    id: 2,
+    title: "The Dragon Republic",
+    author: "R.F. Kuang",
+    price: 190000,
+    img: "images/tdr.jpg",
+    desc: "The Dragon Republic adalah sekuel dari The Poppy War yang menceritakan kelanjutan kisah Rin, sang dukun dan prajurit, setelah Perang Opium Ketiga. Rin kini dihantui rasa bersalah atas kekejamannya, kecanduan opium, dan dikejar oleh Phoenix yang pendendam. Ia bergabung dengan Panglima Perang Naga, Yin Vaisra, untuk membalas dendam pada Permaisuri pengkhianat, tetapi menemukan bahwa Vaisra memiliki motivasi tersembunyi dan Permaisuri jauh lebih kuat dari yang diperkirakan."
+  },
+  {
+    id: 3,
+    title: "The Burning God",
+    author: "R.F. Kuang",
+    price: 190000,
+    img: "images/tbg.jpg",
+    desc: "The Burning God adalah buku terakhir dalam trilogi The Poppy War di mana Fang Runin (Rin) mengumpulkan kekuatan rakyatnya untuk melawan Republik Naga dan penjajah Hesperia. Setelah dikhianati sekutunya, Rin kembali menyatukan dirinya dengan kekuatan rakyat jelata dan mulai bertindak sebagai dewi penyelamat yang memimpin perlawanan. Namun, seiring kekuatan dan pengaruhnya bertambah, ia berjuang melawan suara Phoenix yang mendesaknya untuk menghancurkan dunia demi pembalasan dendam, mempertanyakan apakah ia dapat menahan kekuatan yang menghancurkan tersebut."
+  },
+  {
+    id: 4,
+    title: "The Midnight Library",
+    author: "Matt Haig",
+    price: 110000,
+    img: "images/perpus malam.jpg",
+    desc: "Di dalam Perpustakaan Tengah Malam, terdapat rak-rak yang menyimpan buku-buku untuk memberikan kesempatan Nora mencoba kehidupan lain yang bisa ia jalani. Ketika di ambang kematian, Nora mencoba kehidupan lainnya yang ingin ia jalani lewat buku-buku di Perpustakaan Tengah Malam, dibantu oleh penjaga perpustakaan, Mrs. Elm. Nora tidak bisa kembali ke Perpustakaan apabila ia tidak merasakan penyesalan saat menjalani kehidupan lainnya yang sedang ia jalani. Perpustakaan Tengah Malam karya Matt Haig adalah sebuah novel yang mempesona karena membawa pembaca berpetualang menjelajahi kemungkinan kehidupan-kehidupan Nora Seed di rak perpustakaan. Penulis buku terlaris internasional Reasons to Stay Alive dan How To Stop Time ini kemudian merilis cerita dengan isu kesehatan mental yang dibungkus oleh genre sci-fi yang menarik. Buku ini berbicara tentang penyesalan, hubungan, mimpi, hewan peliharaan, persahabatan, kemungkinan yang akan terjadi, dan yang paling penting bagaimana menjalani hidup di masa sekarang dan memanfaatkannya sebaik mungkin. Akankah Nora menemukan kehidupan impiannya lewat buku-buku di Perpustakaan Tengah Malam."
+  },
+  {
+    id: 5,
+    title: "Laut Bercerita",
+    author: "Leila S. Chudori",
+    price: 115000,
+    img: "images/laut bercerita.jpg",
+    desc: "Buku ini terdiri atas dua bagian. Bagian pertama mengambil sudut pandang seorang mahasiswa aktivis bernama Laut, menceritakan bagaimana Laut dan kawan-kawannya menyusun rencana, berpindah-pindah dalam pelarian, hingga tertangkap oleh pasukan rahasia. Sedangkan bagian kedua dikisahkan oleh Asmara, adik Laut. Bagian kedua mewakili perasaan keluarga korban penghilangan paksa, bagaimana pencarian mereka terhadap kerabat mereka yang tak pernah kembali. Buku ini ditulis sebagai bentuk tribute bagi para aktivis yang diculik, yang kembali, dan yang tak kembali dan keluarga yang terus menerus sampai sekarang mencari-cari jawaban. Novel ini merupakan perwujudan dalam bentuk fiksi bahwa kita sebagai bangsa Indonesia tidak boleh melupakan sejarah yang telah membentuk sekaligus menjadi tumpuan bangsa Ini. Novel ini juga mengajak pembaca menguak misteri-misteri bangsa ini yang mana tidak diajarkan di sekolah. Walaupun novel ini adalah fiksi, laut bercerita menunjukkan kepada pembaca bahwa negeri ini pernah memasuki masa pemerintahan yang kelam. ."
+  },
+  {
+    id: 6,
+    title: "A Good Girl's Guide to Murder",
+    author: "Holly Jackson",
+    price: 140000,
+    img: "images/goodgirlguide.jpeg",
+    desc: "A Good Girl's Guide to Murder menceritakan tentang Pippa Fitz-Amobi, seorang siswi yang curiga kasus pembunuhan yang ditutup lima tahun lalu tidak sepenuhnya diselesaikan. Korban, Andie Bell, diduga dibunuh oleh pacarnya, Sal Singh, yang kemudian bunuh diri, tetapi Pip yakin ada kebenaran lain yang disembunyikan dan memutuskan untuk menyelidiki kasus tersebut sebagai proyek sekolahnya. Dalam upayanya, ia bekerja sama dengan adik Sal, Ravi, dan menemukan bahwa kasus tersebut jauh lebih rumit dari yang terlihat, menempatkan dirinya dan orang-orang di sekitarnya dalam bahaya"
+  },
+    {
+    id: 7,
+    title: "As Long As Lemon Tree Grow",
+    author: "Zoulfa Katouh",
+    price: 140000,
+    img: "images/alsltg.jpg",
+    desc: " Salama Kassab, seorang mahasiswi farmasi di Suriah yang harus berjuang bertahan hidup di tengah perang saudara yang melanda negaranya. Kehidupannya berubah drastis setelah ia kehilangan keluarganya, dan ia harus membuat pilihan sulit: tetap tinggal di tanah airnya yang penuh bahaya untuk menepati janji membantu kakak iparnya yang hamil, atau mengungsi ke tempat yang aman."
+  },
+    {
+    id: 8,
+    title: "Second Sister",
+    author: "Chan Ho-Kei",
+    price: 185000,
+    img: "images/2sist.jpg",
+    desc: "Second Sister adalah novel misteri karya Chan Ho-Kei tentang Nga-Yee yang tidak percaya adiknya, Siu-Man, bunuh diri setelah menjadi korban pelecehan seksual dan perundungan daring. Ia meminta bantuan seorang peretas misterius bernama N untuk menyelidiki kematian adiknya secara mendalam, mengungkap serangkaian kejahatan di dunia digital yang ternyata lebih kompleks dari yang diperkirakan."
+   },
+    {
+    id: 9,
+    title: "Confession",
+    author: "Minato Kanae",
+    price: 105000,
+    img: "images/confes.jpg",
+    desc: "Moriguchi Yuko adalah seorang guru SMP. Saat anaknya, Manami, yang berusia 4 tahun ditemukan meninggal dunia, semua orang mengira itu adalah kecelakaan nahas. Akan tetapi, Moriguchi yakin bahwasannya anaknya tersebut dibunuh oleh dua dari anak didiknya. Oleh karena itu, dia tidak akan membiarkan kedua anak itu bebas. Dia ingin membalas dendam atas kematian anaknya tersebut, dan balas dendam yang dia lakukan itu hanyalah awal dari sebuah mimpi buruk lainnya. Kisah balas dendam Moriguchi Yuko terhadap kedua anak didiknya di dalam buku Confessions ini dikisahkan dengan berbagai plot twist yang tidak akan pernah bisa dibayangkan oleh para pembacanya. Confessions mengeksplorasi tema-tema seperti hukuman, keputusasaan, cinta yang tragis, dan puncaknya pada konfrontasi yang mengerikan di antara guru dan dua orang siswanya yang akhirnya menempatkan seluruh sekolah dalam bahaya."
+  },
+  {
+   id: 10,
+   title: "Keajaiban Toko Kelontong Namiya",
+   author: "Keigo Higashino",
+   price: 130000,
+   img: "images/kelontong namiya.jpg", 
+   desc: "Tiga pemuda pencuri bersembunyi di sebuah toko kelontong tua yang sudah tidak berpenghuni. Anehnya, sepucuk surat misterius berisi curahan hati seseorang dari masa lalu tiba-tiba meluncur masuk melalui lubang surat di pintu gulung toko tersebut."
+  },
+  {
+    id: 11,
+    title: "Devotion of Suspect X",
+    author: "Keigo Higashino",
+    price: 97000,
+    img: "images/x.jpg",
+    desc: "Ketika si mantan suami muncul lagi untuk memeras Yasuko Hanaoka dan putrinya, keadaan menjadi tak terkendali, hingga si mantan suami terbujur kaku di lantai apartemen. Yasuko berniat menghubungi polisi, tetapi mengurungkan niatnya ketika Ishigami, tetangganya, menawarkan bantuan untuk menyembunyikan mayat itu. Saat mayat tersebut ditemukan, penyidikan Detektif Kusanagi mengarah kepada Yasuko. Namun sekuat apa pun insting detektifnya, alibi wanita itu sulit sekali dipatahkan. Kusanagi berkonsultasi dengan sahabatnya, Dr. Manabu Yukawa sang Profesor Galileo, yang ternyata teman kuliah Ishigami. Diselingi nostalgia masa-masa kuliah, Yukawa sang pakar fisika beradu kecerdasan dengan Ishigami, sang genius matematika. Ishigami berjuang melindungi Yasuko dengan berusaha mengakali dan memperdaya Yukawa, yang baru kali ini menemukan lawan paling cerdas dan bertekad baja"
+   },
+    {
+    id: 12,
+    title: "Teka Teki Rumah Aneh",
+    author: "Uketsu",
+    price: 80000,
+    img: "images/tekateki.jpeg",
+    desc: "Seorang kenalan ingin membeli rumah seken di Tokyo dan memperlihatkan denah rumahnya padaku karena merasa ada yang ganjil. Sekilas, rumah ini kelihatan seperti rumah-rumah lain pada umumnya dengan interior yang luas dan terang. Namun, ketika mencermatinya baik-baik, aku mendapati bahwa memang ada keanehan di sana-sini. Keanehan demi keanehan itu bertumpuk, kemudian terjalin membentuk satu “kenyataan”. Kenyataan yang teramat sangat mengerikan, dan sama sekali tidak ingin kupercaya"
+   },
+    {
+    id: 13,
+    title: "Pangeran Cilik",
+    author: "Antoine De Saint",
+    price: 80000,
+    img: "images/prince.jpg",
+    desc: " Cerita bermula ketika salah satu tokoh masih kecil. Suatu hari, ia menggambar ular boa yang menyantap seekor gajah. Namun, saat ia memperlihatkan gambar itu ke orang dewasa, mereka malah menyuruhnya mulai belajar hal-hal lain, seperti aritmetika, geometri, geografi, tata bahasa, dan sebagainya. Mereka juga menyuruhnya untuk berhenti menggambar."
+  },
+    {
+    id: 14,
+    title: "1984",
+    author: "George Orwell",
+    price: 80000,
+    img: "images/1984.jpeg",
+    desc: "Winston Smith berusaha menjalani hidupnya sebagai warga negara yang patuh terhadap aturan-aturan Partai, walaupun hati dan pikirannya memberontak. Winston tidak berani melawan terang-terangan, sebab Big Brother senantiasa mengawasi semua orang. Tak ada privasi bagi siapa pun. Segalanya diatur oleh Negara, bahkan sejarah pun ditulis ulang sesuai kebutuhan. Big Brother menuntut kepatuhan dan kesetiaan total. Yang berani menentang akan diuapkan. Dalam kerinduannya untuk memperoleh kebebasan dan kebenaran, Winston mulai menulis buku harian dan menjalin cinta rahasia dengan Julia. Namun harga kebebasan itu sungguh mahal, sebagaimana dialami Winston kemudian."
+  },
+    {
+    id: 15,
+    title: "Mari Pergi Lebih Jauh",
+    author: "Ziggy Zezsyazeoviennazabrizkie",
+    price: 110000,
+    img: "images/mplj.jpg",
+    desc: "Mi dan Ma dan Mo dan Fufu berhasil melewati apa yang terjadi di Kota Terapung Kucing Luar Biasa. Tidak dengan Fifi. Namun, Mi dan Ma dan Mo dan Fufu selalu percaya bahwa Fifi betulan ada, tidak seperti orang-orang yang bicarakan kalau Fifi hanya bayangan Fufu yang ke mana-mana membaca cermin. Mi dan Ma dan Mo lantas mencari di mana Fifi, sebelum itu mereka harus mencari Fufu yang disembunyikan orang-orang di Rumah Sakit Jiwa GPKA OSM-D. Dan perjalanan Mi dan Ma dan Mo dan Fufu akan semakin jauh. Berjumpa dengan trenggiling dan Petronella dan keseruan tokoh yang lain. Mari Pergi Lebih Jauh adalah novel sekuel dari Kita Pergi Hari Ini" 
+  },
+    {
+    id: 16,
+    title: "Negeri Para Bedebah",
+    author: "Tere liye",
+    price: 110000,
+    img: "images/negeribedebah.jpeg",
+    desc: "adalah novel karya Tere Liye yang mengisahkan perjuangan Thomas, seorang konsultan keuangan brilian, untuk menyelamatkan Bank Semesta milik pamannya dari ancaman likuidasi akibat skandal korupsi. Di balik gemerlap dunia keuangan, ia harus menghadapi konspirasi dan intrik dari para bedebah yang serakah dan manipulatif, memaksa Thomas berhadapan dengan pilihan sulit antara idealisme dan godaan kekuasaan demi membalaskan dendam masa lalu keluarganya" 
+  },
+    {
+    id: 17,
+    title: "Cantik Itu Luka",
+    author: "Holly Jackson",
+    price: 140000,
+    img: "images/cantikituluka.jpeg",
+    desc: "Dewi Ayu, seorang pelacur terkenal di Halimunda, bangkit dari kuburnya setelah dua puluh satu tahun kematian. Novel ini memadukan sejarah, mitos, dan satir, menceritakan kutukan kecantikan yang menghantui garis keturunan perempuan di keluarga tersebut."
+  },
+    {
+    id: 18,
+    title: "A curse For True Love",
+    author: "Stephanie Garber",
+    price: 110000,
+    img: "images/kutukan.jpg",
+    desc: "Tak ada yang lebih diinginkan Evangeline Fox selain akhir bahagia selamanya. Dia menikahi pangeran tampan dan tinggal di istana kerajaan. Dia seharusnya bersenang-senang tanpa satu pun kekhawatiran. Namun, mengapa dia malah merasa hampa? Mengapa rasanya seolah ada sesuatu yang hilang dan meninggalkan lubang menganga di hatinya? Mengapa jantungnya berdebar kencang untuk lelaki asing selain suaminya? Malaikat rupawan berambut keemasan yang memicu sebuah ingatan yang sepertinya terlupakan. Lelaki itu rela menggendongnya melewati apa saja, bukan hanya perairan membekukan. Lelaki itu akan menyeretnya menerjang api jika perlu, menggotongnya agar selamat dari impitan perang, dari kota-kota yang runtuh dan dunia-dunia yang hancur... Ada yang berubah dalam diri Evangeline. Sepertinya, saat ini, dia bukan lagi gadis yang memiliki harapan abadi, yang memercayai dongeng, cinta pandangan pertama, ataupun akhir bahagia selamanya."
+  },
+    {
+    id: 19,
+    title: "The Hunger Games",
+    author: "Suzanne Collins",
+    price: 100000,
+    img: "images/thg.png",
+    desc: "The Hunger Games menceritakan tentang seorang gadis berusia 16 tahun bernama Katniss Everdeen yang tinggal di sebuah tempat bernama Distrik 12, di mana mayoritas penduduknya bekerja sebagai penambang. Distrik 12 adalah sebuah distrik terakhir, salah satu dari 12 distrik di negara yang disebut Panem. Panem sendiri merupakan sebuah negara di mana dulunya Amerika Utara pernah berada, yang setelah bencana besar di bumi menjadi satu-satunya wilayah yang selamat. Karena pemberontakan gagal terhadap pemerintahan Panem 75 tahun sebelumnya, pemerintahan Panem lantas melakukan sebuah kompetisi maut yang diadakan di ibu kota negara yang bernama Capitol."
+  },
+    {
+    id: 20,
+    title: "Catching Fire",
+    author: "Suzanne Collins",
+    price: 95000,
+    img: "images/catchingfire.jpeg",
+    desc: "Memenangkan The Hunger Games merupakan hal yang menggembirakan. Katniss Everdeen dan Peeta Mellark sama-sama masih hidup, serta sama-sama mendapatkan ketenaran dan kemahsyuran. Namun, mereka lupa kalau para victor (pemenang The Hunger Games) harus melakukan Victory Tour alias Tur Kemenangan. Mereka akan pawai ke semua distrik lalu berakhir di Capitol untuk 'merayakan' kemenangan mereka di game. Katniss dan Peeta juga harus menjadi mentor untuk calon tribute The Hunger Games selanjutnya. Sehingga, tentu saja 'akting' berpura-pura saling jatuh cinta yang dilakoni Katniss dan Peeta harus dilanjutkan, karena kehidupan mereka selamanya akan ditelevisikan."
+  },
+    {
+    id: 21,
+    title: "Mockingjay",
+    author: "Suzanne Collins",
+    price: 95000,
+    img: "images/mocking.jpeg",
+    desc: "Pemberontakan makin merajalela di distrik-distrik untuk menjatuhkan Capitol. Kini tak ada seorang pun yang dicintai Katniss aman karena Presiden Snow ingin menumpas revolusi dengan menghancurkan Mockingjay... bagaimanapun caranya" 
+  },
+    {
+    id: 22,
+    title: "Tragedi Perang Keadilan",
+    author: "Keigo Higashino",
+    price: 130000,
+    img: "images/tragedipernagkeadil.jpeg",
+    desc: "Sejak istrinya meninggal, Nagamine Shigeki hidup hanya berdua dengan putrinya, Ema. Suatu malam, Ema pergi menonton festival musim panas. Tetapi ia tidak pernah pulang sampai mayatnya ditemukan di sungai. Dalam hari-hari kelam menunggu proses penyelidikan kepolisian, Nagamine menerima telepon dari seseorang yang memberikan informasi tentang para pelaku dan lokasi pembunuhan Ema. Nagamine memutuskan menyusup ke apartemen yang disebut. Di sana ia menemukan kaset video berisi rekaman peristiwa pemerkosaan dan pembunuhan putrinya."
+  },
+    {
+    id: 23,
+    title: "Malice: Catatan Pembunuhan Sang Novelis",
+    author: "Keigo Higashino",
+    price: 93000,
+    img: "images/malice.jpg",
+    desc: "Novelis laris Hidaka Kunihiko ditemukan tewas di rumahnya pada malam sebelum ia meninggalkan Jepang untuk pindah ke Kanada. Tubuhnya ditemukan di ruang kerjanya yang terkunci di rumahnya yang juga terkunci oleh istri dan sahabatnya. Keduanya punya alibi kuat. Mungkin. Detektif Kaga Kyoichiro yang menyelidiki kasus pembunuhan tersebut menemukan bahwa hubungan Hidaka dengan sang sahabat, Nonoguchi Osamu, tidak seperti yang diceritakan oleh Nonoguchi. Tapi pertanyaan yang paling mengusik Kaga bukanlah siapa atau bagaimana, melainkan kenapa. Dari situlah sang detektif dan sang pembunuh bertarung membeberkan kebenaran tentang masa lalu dan masa kini versi masing-masing. Dan jika Kaga gagal menguak motif sang pembunuh yang sebenarnya, kebenaran takkan terungkap seutuhnya"
+    },
+  {
+    id: 24,
+    title: "Pride and Prejudice",
+    author: "Jane Austen",
+    price: 100000,
+    img: "images/pridenpre.jpg",
+    desc: "Elizabeth Bennet dan Fitzwilliam Darcy sama sekali tidak memiliki kecocokan bahkan sejak mereka belum saling mengenal. Elizabeth menilai Mr. Darcy sebagai pria yang sok, angkuh, dan mengesalkan, sementara Mr. Darcy menganggap Elizabeth tidak anggun dan terlalu sering berprasangka. Cukup lama mereka saling bermusuhan, bahkan sering kali melontarkan sindiran-sindiran pedas terhadap satu sama lain. Kebencian itu tanpa mereka sadari berangsur menjadi ketertarikan yang mendalam. Seiring dengan berjalannya waktu, Elizabeth melihat sisi lain dari Fitzwilliam Darcy, bahwa dia bukanlah sekadar pria arogan atau angkuh seperti yang selama ini Elizabeth sangka."
+  },
+    {
+    id: 25,
+    title: "The 100 Year Old Man Who Climbed Out Of The Window and Dissapeared",
+    author: "Jonas Jonasson",
+    price: 90000,
+    img: "images/100yearold.jpg",
+    desc: "Melompat lewat jendela kamarnya, Allan memutuskan untuk kabur. Dimulai lah sebuah perjalanan luar biasa yang penuh kegilaan. Siapa sangka, petualangannya itu menjadi pintu yang akan mengungkap kehidupan Allan sebelumnya. Sebuah kehidupan di mana tanpa terduga Allan memainkan peran kunci di balik berbagai peristiwa penting pada abad kedua puluh."
+  },
+    {
+    id: 26,
+    title: "Kesatria, Putri & Bintang Jatuh: Supernova",
+    author: "Dee Lestari",
+    price: 90000,
+    img: "images/supernova.jpg",
+    desc: "Menunaikan ikrar mereka untuk berkarya bersama, pasangan Dimas dan Reuben mulai menulis roman yang diberi judul Kesatria, Putri, dan Bintang Jatuh. Paralel dengan itu, dalam kehidupan nyata, sebuah kisah cinta terlarang terjalin antara Ferre dan Rana. Hubungan cinta mereka merepresentasikan dinamika yang terjadi antara tokoh Kesatria dan Putri dalam fiksi Dimas dan Reuben. Tokoh ketiga, Bintang Jatuh, dihadirkan oleh seorang peragawati terkenal bernama Diva, yang memiliki profesi sampingan sebagai pelacur kelas atas. Tanpa ada yang bisa mengantisipasi, kehadiran sosok bernama Supernova menjadi kunci penentu yang akhirnya merajut kehidupan nyata antara Ferre-Rana-Diva dengan kisah fiksi karya Dimas-Reuben dalam satu dimensi kehidupan yang sama"
+  },
+    {
+    id: 27,
+    title: "Haikyuu Fly High Vol. 43",
+    author: "Haruichi Furudate",
+    price: 35000,
+    img: "images/hq43.jpg",
+    desc: "A Good Girl's Guide to Murder menceritakan tentang Pippa Fitz-Amobi, seorang siswi yang curiga kasus pembunuhan yang ditutup lima tahun lalu tidak sepenuhnya diselesaikan. Korban, Andie Bell, diduga dibunuh oleh pacarnya, Sal Singh, yang kemudian bunuh diri, tetapi Pip yakin ada kebenaran lain yang disembunyikan dan memutuskan untuk menyelidiki kasus tersebut sebagai proyek sekolahnya. Dalam upayanya, ia bekerja sama dengan adik Sal, Ravi, dan menemukan bahwa kasus tersebut jauh lebih rumit dari yang terlihat, menempatkan dirinya dan orang-orang di sekitarnya dalam bahaya"
+  },
+    {
+    id: 28,
+    title: "Blue Period Vol.05",
+    author: "Yamaguchi Tsubasa",
+    price: 70000,
+    img: "images/bluep5.png",
+    desc: "A Good Girl's Guide to Murder menceritakan tentang Pippa Fitz-Amobi, seorang siswi yang curiga kasus pembunuhan yang ditutup lima tahun lalu tidak sepenuhnya diselesaikan. Korban, Andie Bell, diduga dibunuh oleh pacarnya, Sal Singh, yang kemudian bunuh diri, tetapi Pip yakin ada kebenaran lain yang disembunyikan dan memutuskan untuk menyelidiki kasus tersebut sebagai proyek sekolahnya. Dalam upayanya, ia bekerja sama dengan adik Sal, Ravi, dan menemukan bahwa kasus tersebut jauh lebih rumit dari yang terlihat, menempatkan dirinya dan orang-orang di sekitarnya dalam bahaya"
+  },
+    {
+    id: 29,
+    title: "Wind  Breaker Vol.11",
+    author: "Satorunii",
+    price: 70000,
+    img: "images/wb.jpg",
+    desc: "A Good Girl's Guide to Murder menceritakan tentang Pippa Fitz-Amobi, seorang siswi yang curiga kasus pembunuhan yang ditutup lima tahun lalu tidak sepenuhnya diselesaikan. Korban, Andie Bell, diduga dibunuh oleh pacarnya, Sal Singh, yang kemudian bunuh diri, tetapi Pip yakin ada kebenaran lain yang disembunyikan dan memutuskan untuk menyelidiki kasus tersebut sebagai proyek sekolahnya. Dalam upayanya, ia bekerja sama dengan adik Sal, Ravi, dan menemukan bahwa kasus tersebut jauh lebih rumit dari yang terlihat, menempatkan dirinya dan orang-orang di sekitarnya dalam bahaya"
+  },
+    {
+    id: 30,
+    title: "Kosmos",
+    author: "Carl Sagan",
+    price: 125000,
+    img: "images/kosmos.jpg",
+    desc: "A Good Girl's Guide to Murder menceritakan tentang Pippa Fitz-Amobi, seorang siswi yang curiga kasus pembunuhan yang ditutup lima tahun lalu tidak sepenuhnya diselesaikan. Korban, Andie Bell, diduga dibunuh oleh pacarnya, Sal Singh, yang kemudian bunuh diri, tetapi Pip yakin ada kebenaran lain yang disembunyikan dan memutuskan untuk menyelidiki kasus tersebut sebagai proyek sekolahnya. Dalam upayanya, ia bekerja sama dengan adik Sal, Ravi, dan menemukan bahwa kasus tersebut jauh lebih rumit dari yang terlihat, menempatkan dirinya dan orang-orang di sekitarnya dalam bahaya"
+  },
+];
+    const categories = [
+      { name: "Fantasi & Fiksi", ids: [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        21, 22, 23, 24, 25, 26] },
+      { name: "Komik", ids: [27, 28, 29] },
+      { name: "Best Seller", ids: [30, 1, 2, 3, 9, 12, 17] }
+    ];
+
+    /* ========================================
+       SIDEBAR KATEGORI
+    ======================================== */
+    function renderKategori() {
+      const ul = document.getElementById("kategoriList");
+      ul.innerHTML = "";
+      categories.forEach(cat => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="#" onclick="filterByKategori('${cat.name}')">${cat.name}</a>`;
+        ul.appendChild(li);
+      });
+    }
+
+    /* ========================================
+       RENDER PRODUK
+    ======================================== */
+    function renderProducts(filterCat = null) {
+      const app = document.getElementById("app");
+      let filtered = products;
+
+      if (filterCat) {
+        const cat = categories.find(c => c.name === filterCat);
+        if (cat) filtered = products.filter(p => cat.ids.includes(p.id));
+      }
+
+      app.innerHTML =
+        `<div class="products">` +
+        filtered.map(p => `
+          <div class="product">
+            <img src="${p.img}" alt="${p.title}">
+            <h3>${p.title}</h3>
+            <p>${p.author}</p>
+            <h4>Rp ${p.price.toLocaleString()}</h4>
+            <button onclick="openDetail(${p.id})">Detail</button>
+            <button onclick="addToCart(${p.id})">Tambah</button>
+          </div>
+        `).join("") +
+        `</div>`;
+    }
+
+    function filterByKategori(catName) {
+      renderProducts(catName);
+    }
+
+    /* ========================================
+       KERANJANG (CART)
+    ======================================== */
+    let cart = [];
+    // Variabel untuk menyimpan item yang DIPILIH (dicentang) user untuk checkout
+    let checkoutItems = []; 
+
+    function addToCart(id) {
+      const exist = cart.find(x => x.id === id);
+      if (exist) exist.qty++;
+      else cart.push({ id, qty: 1 });
+
+      updateCartCount();
+      alert("Buku ditambahkan!");
+    }
+
+    function updateCartCount() {
+      document.getElementById("cartCount").innerText =
+        cart.reduce((a, c) => a + c.qty, 0);
+    }
+
+    function renderCart() {
+      const app = document.getElementById("app");
+      if (cart.length === 0) {
+        app.innerHTML = `<div class="container"><h2>Keranjang Kosong</h2><button onclick="showPage('home')">Belanja Sekarang</button></div>`;
+        return;
+      }
+
+      let html = `<div class="container"><h2>Keranjang Belanja</h2>`;
+      html += `<p>Pilih buku yang ingin di-checkout dengan mencentang kotak di kiri.</p>`;
+      
+      cart.forEach(item => {
+        const p = products.find(x => x.id === item.id);
+        
+        // Checkbox ditambahkan di sini
+        html += `
+          <div class="cart-item">
+            <input type="checkbox" class="select-item" value="${item.id}" style="transform: scale(1.5);">
+            
+            <img src="${p.img}" style="width:60px; height:80px; object-fit:cover; border-radius:4px;">
+            
+            <div class="cart-info">
+                <strong>${p.title}</strong><br>
+                Rp ${p.price.toLocaleString()}
+            </div>
+
+            <div>
+                 <input type="number" min="1" value="${item.qty}" onchange="changeQty(${p.id}, this.value)" style="width:40px; padding:5px;">
+            </div>
+            
+            <button onclick="removeItem(${p.id})" style="background:#a63e3e;">Hapus</button>
+          </div>
+        `;
+      });
+
+      html += `<br><button onclick="processSelectedCheckout()" style="width:100%; padding:15px; font-size:16px;">Checkout Barang Terpilih</button>`;
+      html += `</div>`;
+
+      app.innerHTML = html;
+    }
+
+    function changeQty(id, qty) {
+      const item = cart.find(x => x.id === id);
+      item.qty = parseInt(qty);
+      updateCartCount(); // renderCart tidak dipanggil agar checkbox tidak reset
+    }
+
+    function removeItem(id) {
+      cart = cart.filter(x => x.id !== id);
+      renderCart();
+      updateCartCount();
+    }
+
+    /* ========================================
+       DETAIL PRODUK
+    ======================================== */
+    function openDetail(id) {
+      const p = products.find(x => x.id === id);
+      const app = document.getElementById("app");
+      app.innerHTML = `
+        <div class="container">
+          <button onclick="showPage('home')">← Kembali</button>
+          <h2>${p.title}</h2>
+          <img src="${p.img}" style="width:300px; border-radius:8px;"><br><br>
+          <h3>${p.author}</h3>
+          <p>${p.desc}</p>
+          <h3>Rp ${p.price.toLocaleString()}</h3>
+          <button onclick="addToCart(${p.id})">Tambah ke Keranjang</button>
+        </div>
+      `;
+    }
+
+    /* ========================================
+       LOGIKA PILIH CHECKOUT (MULTI SELECT)
+    ======================================== */
+    function processSelectedCheckout() {
+        // 1. Ambil semua checkbox yang dicentang
+        const checkboxes = document.querySelectorAll('.select-item:checked');
+        
+        if (checkboxes.length === 0) {
+            alert("Silakan pilih minimal satu produk untuk di-checkout!");
+            return;
+        }
+
+        // 2. Filter data keranjang berdasarkan ID yang dicentang
+        checkoutItems = []; // Reset dulu
+        checkboxes.forEach(cb => {
+            const id = parseInt(cb.value);
+            const cartItem = cart.find(c => c.id === id);
+            if (cartItem) {
+                const productInfo = products.find(p => p.id === id);
+                // Gabungkan info qty dari cart dan info detail dari product
+                checkoutItems.push({
+                    ...cartItem,
+                    ...productInfo
+                });
+            }
+        });
+
+        // 3. Pindah ke halaman form checkout
+        showPage("checkoutForm");
+    }
+
+    /* ========================================
+       HALAMAN FORM CHECKOUT
+    ======================================== */
+    function renderCheckoutForm() {
+      const app = document.getElementById("app");
+      
+      // Hitung Total dari item yang dipilih saja
+      let totalBayar = checkoutItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
+
+      // Buat ringkasan pesanan
+      let summaryHtml = checkoutItems.map(item => `
+        <div class="summary-row">
+            <span>${item.title} (x${item.qty})</span>
+            <span>Rp ${(item.price * item.qty).toLocaleString()}</span>
+        </div>
+      `).join("");
+
+      app.innerHTML = `
+        <div class="container">
+          <h2>Konfirmasi Pesanan</h2>
+          
+          <div class="checkout-summary">
+            <h3>Ringkasan Belanja</h3>
+            ${summaryHtml}
+            <hr>
+            <div class="summary-row" style="font-weight:bold; font-size:18px;">
+                <span>Total Bayar</span>
+                <span>Rp ${totalBayar.toLocaleString()}</span>
+            </div>
+          </div>
+
+          <h3>Data Pengiriman</h3>
+          <label>Nama Lengkap</label><br>
+          <input id="nama" style="width:100%; padding:8px;"><br><br>
+
+          <label>Alamat Lengkap</label><br>
+          <textarea id="alamat" style="width:100%; padding:8px;"></textarea><br><br>
+
+          <label>No Telepon (WhatsApp)</label><br>
+          <input id="telp" style="width:100%; padding:8px;"><br><br>
+
+          <label>Metode Pembayaran</label><br>
+          <select id="pembayaran" onchange="toggleRekening()" style="width:100%; padding:8px;">
+            <option value="">-- Pilih --</option>
+            <option value="cod">COD (Bayar di tempat)</option>
+            <option value="bank">Transfer Bank</option>
+          </select>
+
+          <div id="rekeningBox" style="display:none; background:#e8dfd3; padding:15px; border-radius:8px; margin-top:15px; border:1px dashed #8b7765;">
+            <strong>Nomor Rekening Fantasia Bookstore:</strong><br>
+            BCA: 8880 1234 567 a/n Fantasia<br>
+            BRI: 1234 5678 999 a/n Fantasia
+          </div>
+
+          <br><br>
+          <button onclick="submitOrder()" style="width:100%; padding:15px; background-color:#28a745;">Buat Pesanan</button>
+          <button onclick="showPage('cart')" style="margin-top:10px; background-color:#ccc; color:#333;">Kembali ke Keranjang</button>
+        </div>
+      `;
+    }
+
+    function toggleRekening() {
+      const metode = document.getElementById("pembayaran").value;
+      document.getElementById("rekeningBox").style.display =
+        metode === "bank" ? "block" : "none";
+    }
+
+    function submitOrder() {
+      let nama = document.getElementById("nama").value.trim();
+      let alamat = document.getElementById("alamat").value.trim();
+      let bayar = document.getElementById("pembayaran").value;
+
+      if (!nama || !alamat || !bayar) {
+        alert("Mohon lengkapi Nama, Alamat, dan Metode Pembayaran!");
+        return;
+      }
+
+      // HAPUS ITEM YANG SUDAH DIBELI DARI KERANJANG UTAMA
+      // Logic: Pertahankan item di cart JIKA id-nya TIDAK ADA di checkoutItems
+      const purchasedIds = checkoutItems.map(i => i.id);
+      cart = cart.filter(item => !purchasedIds.includes(item.id));
+      
+      updateCartCount();
+      
+      alert(`Terima kasih kak ${nama}!\nPesanan berhasil dibuat untuk ${checkoutItems.length} produk.`);
+      
+      // Kosongkan session checkout dan kembali ke home
+      checkoutItems = [];
+      showPage("home");
+    }
+
+    /* ========================================
+       ROUTER HALAMAN
+    ======================================== */
+    function showPage(page) {
+      const app = document.getElementById("app");
+      // Scroll ke atas setiap ganti halaman
+      window.scrollTo(0, 0);
+
+      if (page === "home") return renderProducts();
+      if (page === "cart") return renderCart();
+      if (page === "checkoutForm") return renderCheckoutForm();
+    }
+
+    /* ========================================
+       LOAD AWAL
+    ======================================== */
+    window.onload = function () {
+      renderKategori();
+      showPage("home");
+    };
+  </script>
+
+</body>
+</html>
